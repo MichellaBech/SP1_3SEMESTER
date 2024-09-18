@@ -5,6 +5,8 @@ import dat.dtos.MovieDTO;
 import dat.entities.Movie;
 <<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 import jakarta.persistence.EntityManagerFactory;
 
 import java.io.IOException;
