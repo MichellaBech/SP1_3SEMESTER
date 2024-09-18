@@ -3,6 +3,7 @@ package dat;
 import dat.config.HibernateConfig;
 import dat.dtos.MovieDTO;
 import dat.entities.Movie;
+<<<<<<< Updated upstream
 
 import jakarta.persistence.EntityManagerFactory;
 
