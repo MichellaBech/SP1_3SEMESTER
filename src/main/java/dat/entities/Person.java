@@ -3,8 +3,11 @@ package dat.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
-@Data
+@Getter
 @Builder
 @ToString
 @NoArgsConstructor
@@ -12,8 +15,12 @@ import lombok.*;
 public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+
     private Long id;
     private String name;
+    private String knownForDepartment;
+
+    @ManyToMany
+    private List<Movie> movieList = new ArrayList<>();
 }
 
