@@ -1,27 +1,30 @@
 package dat.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import dat.dtos.MovieDTO;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
-
 @Entity
 @Getter
+@Setter
 @Builder
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Table(name = "movies") // Ensure table name matches your database schema
 public class Movie {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String title;
-    private String movieReleaseDate;
 
-    @ManyToMany
-    private List<Genre> genres;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Ensure IDs are auto-generated
+    private Long id;
+
+    @Column(name = "title", nullable = false)
+    private String title;
+
+    @JsonProperty("release_date")
+    @Column(name = "release_date")
+    private String releaseDate;
+
 
 }
