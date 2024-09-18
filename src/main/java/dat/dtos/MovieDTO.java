@@ -1,29 +1,36 @@
 package dat.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.Builder;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import dat.entities.Movie;
+import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class MovieDTO {
-
-    private List<Genre> genres;
     private int id;
     private String overview;
     private String releaseDate;
     private String title;
+    @JsonProperty("results")
+    @Builder.Default
+    private List<Movie> movies = new ArrayList<>(); // Default to a mutable list
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Genre {
-        private int id;
-        private String name;
-    }
+    @JsonProperty("page")
+    private int page; // Current page
+
+    @JsonProperty("total_pages")
+    private int totalPages; // This should map the total pages from API
+
+    @JsonProperty("total_results")
+    private int totalResults; // This s
+
+
 }
 
