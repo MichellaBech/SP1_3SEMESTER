@@ -16,7 +16,8 @@ import java.util.stream.Collectors;
 
 public class GenreService {
 
-    private static final String GENRE_API_URL = "https://api.themoviedb.org/3/genre/movie/list?api_key=YOUR_VALID_API_KEY&language=en-US";
+    public static final String API_KEY = System.getenv("API_KEY");
+    private static final String GENRE_API_URL = "https://api.themoviedb.org/3/genre/movie/list?api_key=" + API_KEY + "&language=en-US";
 
     public static List<Genre> fetchAndSaveGenres(EntityManager entityManager) throws IOException, InterruptedException {
         // Fetch genres from API

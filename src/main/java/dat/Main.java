@@ -42,6 +42,15 @@ public class Main {
             });
             entityManager.getTransaction().commit();
 
+            // After committing the transaction, call the getAll() method to fetch all movies
+            List<Movie> allMovies = movieDAO.getAll();
+
+            // Print out all the movies
+            System.out.println("All movies from the database:");
+            for (Movie movie : allMovies) {
+                System.out.println("Title: " + movie.getTitle());
+            }
+
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             if (entityManager.getTransaction().isActive()) {
