@@ -9,6 +9,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 
 import java.io.IOException;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -42,6 +43,14 @@ public class Main {
             // Commit the transaction after saving all movies
             entityManager.getTransaction().commit();
 
+            // After committing the transaction, call the getAll() method to fetch all movies
+            List<Movie> allMovies = movieDAO.getAll();
+
+            // Print out all the movies
+            System.out.println("All movies from the database:");
+            for (Movie movie : allMovies) {
+                System.out.println("Title: " + movie.getTitle());
+            }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             if (entityManager.getTransaction().isActive()) {

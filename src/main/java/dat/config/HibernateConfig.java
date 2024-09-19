@@ -1,7 +1,6 @@
 package dat.config;
 
 import dat.entities.Movie; // Import your Movie entity
-import dat.utils.Utils;
 import jakarta.persistence.EntityManagerFactory;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;

@@ -16,7 +16,6 @@ public class MovieService {
 
     // API key is fetched from the environment variable, fallback to hardcoded key for testing
     public static final String API_KEY = System.getenv("API_KEY") != null ? System.getenv("API_KEY").trim() : "your_api_key_here"; // Trim any whitespace
-    public static final String BASE_URL_MOVIE = "https://api.themoviedb.org/3/movie/";
     public static final String FETCH_DANISH_MOVIES = "https://api.themoviedb.org/3/discover/movie";
 
     public static MovieDTO getAllDanishMovies() throws IOException, InterruptedException {
