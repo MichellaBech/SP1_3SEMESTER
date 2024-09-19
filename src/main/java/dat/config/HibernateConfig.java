@@ -1,7 +1,8 @@
 package dat.config;
 
+import dat.entities.Genre;
 import dat.entities.Movie; // Import your Movie entity
-import dat.utils.Utils;
+
 import jakarta.persistence.EntityManagerFactory;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -38,8 +39,8 @@ public class HibernateConfig {
 
     // Register your entity classes here for them to be recognized by Hibernate
     private static void getAnnotationConfiguration(Configuration configuration) {
-        configuration.addAnnotatedClass(Movie.class); // Add Movie entity
-        // Add any other entities you might have, e.g., Genre, Director, etc.
+        configuration.addAnnotatedClass(Movie.class);
+        configuration.addAnnotatedClass(Genre.class);
     }
 
     private static EntityManagerFactory createEMF(boolean forTest) {

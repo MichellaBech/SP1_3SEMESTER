@@ -14,23 +14,22 @@ import java.util.List;
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MovieDTO {
+
     private int id;
     private String overview;
     private String releaseDate;
     private String title;
+
+    @JsonProperty("genre_ids")
+    private List<Long> genreIds;  // List to capture genre IDs from the API
+
     @JsonProperty("results")
     @Builder.Default
-    private List<Movie> movies = new ArrayList<>(); // Default to a mutable list
-
-    @JsonProperty("page")
-    private int page; // Current page
+    private List<Movie> movies = new ArrayList<>();
 
     @JsonProperty("total_pages")
-    private int totalPages; // This should map the total pages from API
+    private int totalPages;
 
     @JsonProperty("total_results")
-    private int totalResults; // This s
-
-
+    private int totalResults;
 }
-
