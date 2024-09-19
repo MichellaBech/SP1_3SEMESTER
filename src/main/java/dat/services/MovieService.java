@@ -21,7 +21,7 @@ public class MovieService {
     public static final String API_KEY = System.getenv("API_KEY");
     public static final String FETCH_DANISH_MOVIES = "https://api.themoviedb.org/3/discover/movie";
 
-    public static MovieDTO fetchMoviesAndAssociateGenres(EntityManager entityManager, GenreDAO genreDAO) throws IOException, InterruptedException {
+    public static MovieDTO fetchMoviesAndAssociateGenres(GenreDAO genreDAO) throws IOException, InterruptedException {
 
         String release_year = "2019-01-01";
         ArrayList<Movie> allMovies = new ArrayList<>();

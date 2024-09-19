@@ -1,7 +1,6 @@
 package dat.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dat.dtos.GenreDTO;
 import dat.entities.Genre;
 import dat.daos.GenreDAO;
 import jakarta.persistence.EntityManager;
