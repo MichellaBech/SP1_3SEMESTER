@@ -22,14 +22,9 @@ public class MovieDAO {
         return entityManager.createQuery("SELECT m FROM Movie m", Movie.class).getResultList();
     }
 
-    // Use merge to update or insert a movie
+    // Always use merge to handle both detached and new entities
     public void save(Movie movie) {
-        try {
-            entityManager.merge(movie);  // Use merge instead of persist
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to merge movie", e);
-        }
+        entityManager.merge(movie);  // Use merge for both new and existing entities
     }
 
     public void update(Movie movie) {

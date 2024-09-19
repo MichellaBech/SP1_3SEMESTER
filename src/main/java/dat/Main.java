@@ -1,14 +1,18 @@
 package dat;
 
 import dat.config.HibernateConfig;
+import dat.daos.GenreDAO;
 import dat.daos.MovieDAO;
-import dat.entities.Movie;
-import dat.services.MovieService;
 import dat.dtos.MovieDTO;
+import dat.entities.Genre;
+import dat.entities.Movie;
+import dat.services.GenreService;
+import dat.services.MovieService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 
 import java.io.IOException;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -17,41 +21,34 @@ public class Main {
 
         // Initialize the EntityManagerFactory (for dev or production environment)
         EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory();
-
-        // Create an EntityManager
         EntityManager entityManager = emf.createEntityManager();
 
-        // Create MovieDAO using the EntityManager
+        // Create DAOs for Movie and Genre
         MovieDAO movieDAO = new MovieDAO(entityManager);
+        GenreDAO genreDAO = new GenreDAO(entityManager);
 
         try {
-            // Fetch all Danish movies from the API
-            MovieDTO movieDTO = MovieService.getAllDanishMovies();
+            // Step 1: Fetch and save genres
+            List<Genre> genres = GenreService.fetchAndSaveGenres(entityManager);
 
-            // Begin transaction
+            // Step 2: Fetch movies and associate with genres
+            MovieDTO movieDTO = MovieService.fetchMoviesAndAssociateGenres(entityManager, genreDAO);
+
+            // Step 3: Save movies to the database
             entityManager.getTransaction().begin();
-
-            // Iterate over the movies fetched from the API and save them to the database
-            for (Movie movie : movieDTO.getMovies()) {
-                System.out.println("Saving movie: " + movie.getTitle());
-                // Persist the movie without checking if it exists
+            movieDTO.getMovies().forEach(movie -> {
                 movieDAO.save(movie);
                 System.out.println("Movie saved: " + movie.getTitle());
-            }
-
-            // Commit the transaction after saving all movies
+            });
             entityManager.getTransaction().commit();
 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback(); // Rollback if something fails
+                entityManager.getTransaction().rollback();
             }
         } finally {
-            // Close EntityManager
             entityManager.close();
-
-            // Close EntityManagerFactory (optional)
             emf.close();
         }
     }

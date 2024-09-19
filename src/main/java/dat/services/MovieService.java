@@ -1,9 +1,11 @@
 package dat.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dat.dtos.MovieDTO;
+import dat.entities.Genre;
 import dat.entities.Movie;
+import dat.daos.GenreDAO;
+import jakarta.persistence.EntityManager;
 
 import java.io.IOException;
 import java.net.URI;
@@ -11,24 +13,18 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class MovieService {
 
-    // API key is fetched from the environment variable, fallback to hardcoded key for testing
-    public static final String API_KEY = System.getenv("API_KEY") != null ? System.getenv("API_KEY").trim() : "your_api_key_here"; // Trim any whitespace
-    public static final String BASE_URL_MOVIE = "https://api.themoviedb.org/3/movie/";
+    public static final String API_KEY = System.getenv("API_KEY") != null ? System.getenv("API_KEY").trim() :"16e2018c0e5f25e184067f3d0e25b8e4";
     public static final String FETCH_DANISH_MOVIES = "https://api.themoviedb.org/3/discover/movie";
 
-    public static MovieDTO getAllDanishMovies() throws IOException, InterruptedException {
+    public static MovieDTO fetchMoviesAndAssociateGenres(EntityManager entityManager, GenreDAO genreDAO) throws IOException, InterruptedException {
 
         String release_year = "2019-01-01";
-        // Ensure that API_KEY is set
-        if (API_KEY == null || API_KEY.isEmpty()) {
-            System.err.println("API Key is not set. Please provide an API key in the environment variable 'API_KEY' or directly in the code.");
-            throw new IllegalArgumentException("API key is not set in environment variables.");
-        }
-
-        ArrayList<Movie> allMovies = new ArrayList<>(); // To store all movies
+        ArrayList<Movie> allMovies = new ArrayList<>();
         int currentPage = 1;
         int totalPages;
 
@@ -38,39 +34,34 @@ public class MovieService {
                     + release_year + "&with_original_language=da&page=" + currentPage;
 
             HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest
-                    .newBuilder()
-                    .uri(URI.create(url))
-                    .GET()
-                    .build();
-
+            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            // Log the API response body to check if it's valid JSON
-            System.out.println("API Response: " + response.body());
-
             ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.registerModule(new JavaTimeModule());
+            MovieDTO movieDTO = objectMapper.readValue(response.body(), MovieDTO.class);
 
-            // Try to parse the response and catch any exceptions
-            try {
-                MovieDTO movieDTO = objectMapper.readValue(response.body(), MovieDTO.class);
-                // Add the movies from this page to the allMovies list
-                allMovies.addAll(movieDTO.getMovies());
+            // Process each movie and associate genres
+            List<Movie> moviesWithGenres = movieDTO.getMovies().stream().map(movie -> {
+                // Fetch genres for the movie by matching genre IDs with the saved genres in the DB
+                if (movie.getGenreIds() != null) {
+                    List<Genre> genres = movie.getGenreIds().stream()
+                            .map(genreDAO::findById)  // Fetch the Genre entity from DB by ID
+                            .filter(genre -> genre != null)  // Filter out any null values
+                            .collect(Collectors.toList());
+                    movie.setGenres(genres);
+                } else {
+                    System.out.println("No genres found for movie: " + movie.getTitle());
+                }
+                return movie;
+            }).collect(Collectors.toList());
 
-                // Get the total number of pages from the first request
-                totalPages = movieDTO.getTotalPages();
-                currentPage++; // Move to the next page
-            } catch (Exception e) {
-                System.err.println("Error parsing API response: " + e.getMessage());
-                throw new IOException("Failed to parse API response", e);
-            }
-        } while (currentPage <= totalPages); // Keep going until we fetch all pages
+            allMovies.addAll(moviesWithGenres);
+            totalPages = movieDTO.getTotalPages();
+            currentPage++;
+        } while (currentPage <= totalPages);
 
-        // Create a final MovieDTO object with all movies
         return MovieDTO.builder()
                 .movies(allMovies)
-                .page(totalPages)  // Not really needed, but keeping it for reference
                 .build();
     }
 }
