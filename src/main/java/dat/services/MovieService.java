@@ -18,10 +18,10 @@ import java.util.stream.Collectors;
 
 public class MovieService {
 
-    public static final String API_KEY = System.getenv("API_KEY") != null ? System.getenv("API_KEY").trim() :"16e2018c0e5f25e184067f3d0e25b8e4";
+    public static final String API_KEY = System.getenv("API_KEY");
     public static final String FETCH_DANISH_MOVIES = "https://api.themoviedb.org/3/discover/movie";
 
-    public static MovieDTO fetchMoviesAndAssociateGenres(EntityManager entityManager, GenreDAO genreDAO) throws IOException, InterruptedException {
+    public static MovieDTO fetchMoviesAndAssociateGenres(GenreDAO genreDAO) throws IOException, InterruptedException {
 
         String release_year = "2019-01-01";
         ArrayList<Movie> allMovies = new ArrayList<>();

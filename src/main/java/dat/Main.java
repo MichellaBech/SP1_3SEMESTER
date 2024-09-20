@@ -16,8 +16,6 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        // Check if API_KEY is correctly set
-        System.out.println("API_KEY: " + System.getenv("API_KEY"));
 
         // Initialize the EntityManagerFactory (for dev or production environment)
         EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory();
@@ -32,7 +30,7 @@ public class Main {
             List<Genre> genres = GenreService.fetchAndSaveGenres(entityManager);
 
             // Step 2: Fetch movies and associate with genres
-            MovieDTO movieDTO = MovieService.fetchMoviesAndAssociateGenres(entityManager, genreDAO);
+            MovieDTO movieDTO = MovieService.fetchMoviesAndAssociateGenres(genreDAO);
 
             // Step 3: Save movies to the database
             entityManager.getTransaction().begin();
@@ -41,6 +39,15 @@ public class Main {
                 System.out.println("Movie saved: " + movie.getTitle());
             });
             entityManager.getTransaction().commit();
+
+            // After committing the transaction, call the getAll() method to fetch all movies
+            List<Movie> allMovies = movieDAO.getAll();
+
+            // Print out all the movies
+            System.out.println("All movies from the database:");
+            for (Movie movie : allMovies) {
+                System.out.println("Title: " + movie.getTitle());
+            }
 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();

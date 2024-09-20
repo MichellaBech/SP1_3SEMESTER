@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import dat.dtos.GenreDTO;
 import java.util.List;
 
-@JsonIgnoreProperties(ignoreUnknown = true)  // Ignore any unknown fields (like status_code or others)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GenreResponse {
     private List<GenreDTO> genres;  // List of genres from the API
 
