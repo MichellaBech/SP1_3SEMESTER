@@ -1,32 +1,36 @@
 package dat.daos;
 
 import dat.entities.Movie;
+import dat.persistence.IDAO;
 import jakarta.persistence.EntityManager;
 
 import java.util.List;
 import java.util.Optional;
 
-public class MovieDAO {
+public class MovieDAO implements IDAO<Movie> {
     private final EntityManager entityManager;
 
     public MovieDAO(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
-    public Optional<Movie> getById(int id) {
+    @Override
+    public Optional<Movie> getByMovieId(int id) {
         Movie movie = entityManager.find(Movie.class, id);
         return Optional.ofNullable(movie);
     }
 
+    @Override
     public List<Movie> getAll() {
         return entityManager.createQuery("SELECT m FROM Movie m", Movie.class).getResultList();
     }
 
-    // Always use merge to handle both detached and new entities
+    @Override
     public void save(Movie movie) {
         entityManager.merge(movie);  // Use merge for both new and existing entities
     }
 
+    @Override
     public void update(Movie movie) {
         try {
             entityManager.merge(movie);  // Use merge for updating
@@ -36,6 +40,7 @@ public class MovieDAO {
         }
     }
 
+    @Override
     public void delete(Movie movie) {
         try {
             entityManager.remove(movie);
