@@ -24,6 +24,18 @@
 
     <dependencies>
 
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version> <!-- Brug den nyeste version -->
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
         <!-- Hibernate Core -->
         <dependency>
             <groupId>org.hibernate.orm</groupId>
@@ -80,6 +92,8 @@
             <artifactId>HikariCP</artifactId>
             <version>${hikari.version}</version>
         </dependency>
+
+
 
         <!-- Lombok for reducing boilerplate code -->
         <dependency>
