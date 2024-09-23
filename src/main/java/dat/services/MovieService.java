@@ -40,13 +40,11 @@ public class MovieService {
             ObjectMapper objectMapper = new ObjectMapper();
             MovieDTO movieDTO = objectMapper.readValue(response.body(), MovieDTO.class);
 
-            // Process each movie and associate genres
             List<Movie> moviesWithGenres = movieDTO.getMovies().stream().map(movie -> {
-                // Fetch genres for the movie by matching genre IDs with the saved genres in the DB
                 if (movie.getGenreIds() != null) {
                     List<Genre> genres = movie.getGenreIds().stream()
-                            .map(genreDAO::findById)  // Fetch the Genre entity from DB by ID
-                            .filter(genre -> genre != null)  // Filter out any null values
+                            .map(genreDAO::findById)
+                            .filter(genre -> genre != null)
                             .collect(Collectors.toList());
                     movie.setGenres(genres);
                 } else {
@@ -58,7 +56,8 @@ public class MovieService {
             allMovies.addAll(moviesWithGenres);
             totalPages = movieDTO.getTotalPages();
             currentPage++;
-        } while (currentPage <= totalPages);
+        }
+        while (currentPage <= totalPages);
 
         return MovieDTO.builder()
                 .movies(allMovies)

@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)  // Ignore any unrecognized fields in the API response
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Movie {
 
     @Id
@@ -35,6 +35,6 @@ public class Movie {
     private List<Genre> genres = new ArrayList<>();
 
     @Transient
-    @JsonProperty("genre_ids")  // Ensure Jackson maps 'genre_ids' from the API response to this field
-    private List<Long> genreIds;  // Transient field to hold genre IDs from the API
+    @JsonProperty("genre_ids")
+    private List<Long> genreIds;
 }

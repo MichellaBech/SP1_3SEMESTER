@@ -20,7 +20,5 @@ public class Genre {
     private String name;
 
     @ManyToMany(mappedBy = "genres")
-    private List<Movie> movies = new ArrayList<>(); // Initialize as empty list
+    private List<Movie> movies = new ArrayList<>();
 }
-
-

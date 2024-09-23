@@ -21,7 +21,7 @@ public class MovieDTO {
     private String title;
 
     @JsonProperty("genre_ids")
-    private List<Long> genreIds;  // List to capture genre IDs from the API
+    private List<Long> genreIds;
 
     @JsonProperty("results")
     @Builder.Default

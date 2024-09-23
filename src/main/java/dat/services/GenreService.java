@@ -47,7 +47,6 @@ public class GenreService {
 
         entityManager.getTransaction().begin();
         genres.forEach(genre -> {
-            // Brug altid merge - uanset om genren er ny eller eksisterende
             Genre mergedGenre = entityManager.merge(genre);
             System.out.println("Genre persisted or merged: " + mergedGenre.getName());
         });

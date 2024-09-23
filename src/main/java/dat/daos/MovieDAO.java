@@ -15,19 +15,13 @@ public class MovieDAO implements IDAO<Movie> {
     }
 
     @Override
-    public Optional<Movie> getByMovieId(int id) {
-        Movie movie = entityManager.find(Movie.class, id);
-        return Optional.ofNullable(movie);
-    }
-
-    @Override
     public List<Movie> getAll() {
         return entityManager.createQuery("SELECT m FROM Movie m", Movie.class).getResultList();
     }
 
     @Override
     public void save(Movie movie) {
-        entityManager.merge(movie);  // Use merge for both new and existing entities
+        entityManager.merge(movie);
     }
 
     @Override
